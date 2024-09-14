@@ -32,14 +32,14 @@ const Navbar = () => {
 						<i className="fi fi-br-search text-xl pt-1"></i>
 					</button>
 					<Link to="/editor" className=" hidden md:flex link gap-2 mt-1">
-						<i class="fi fi-rr-edit text-2xl"></i>
+						<i className="fi fi-rr-edit text-2xl"></i>
 						<p className="text-2xl">Write</p>
 					</Link>
-					<Link to="/signin" className="btn-dark py">
-						Sign In
+					<Link to="/login" className="btn-dark py">
+						Login
 					</Link>
-					<Link to="/signup" className=" hidden md:block btn-dark py">
-						Sign Up
+					<Link to="/register" className=" hidden md:block btn-dark py">
+						Register
 					</Link>
 				</div>
 			</nav>
