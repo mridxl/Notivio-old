@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-const blogSchema = mongoose.Schema(
+const blogSchema = new Schema(
 	{
 		blog_id: {
 			type: String,

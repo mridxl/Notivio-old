@@ -29,7 +29,7 @@ let profile_imgs_collections_list = [
 	'fun-emoji',
 ];
 
-const userSchema = mongoose.Schema(
+const userSchema = new Schema(
 	{
 		personal_info: {
 			fullname: {

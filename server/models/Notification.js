@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-const notificationSchema = mongoose.Schema(
+const notificationSchema = new Schema(
 	{
 		type: {
 			type: String,

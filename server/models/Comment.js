@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-const commentSchema = mongoose.Schema(
+const commentSchema = new Schema(
 	{
 		blog_id: {
 			type: Schema.Types.ObjectId,
