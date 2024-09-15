@@ -6,7 +6,7 @@ function RegisterForm() {
 	return (
 		<>
 			<InputBox
-				name="fullName"
+				name="fullname"
 				type="text"
 				placeholder="Full Name"
 				icon="fi-rr-circle-user text-1xl"

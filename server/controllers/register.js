@@ -37,7 +37,7 @@ export default async function register(req, res) {
 		});
 	} catch (error) {
 		if (error.code === 11000) {
-			return res.status(500).json({
+			return res.status(401).json({
 				error: 'Email already exists. Try again with a different email.',
 			});
 		}
