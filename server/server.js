@@ -1,9 +1,21 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import connectDB from './config/db.js';
+import register from './controllers/register.js';
+import login from './controllers/login.js';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(cors());
+
+app.post('/register', register);
+app.post('/login', login);
 
 // Connect to mongoDB
 connectDB();
