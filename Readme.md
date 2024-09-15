@@ -20,6 +20,10 @@ Notivio is a modern blog-sharing platform designed to make content creation and 
 14. **Mobile Responsive**: Fully optimized for mobile with a modern design and smooth page transitions.
 15. **Dark Mode**: Toggle between light and dark mode for a comfortable reading experience.
 
+## 🚧 Still Under Development
+
+Notivio is currently a work in progress. Many features are in active development. Feel free to explore the project, but note that some functionalities may not be fully implemented or might undergo significant changes.
+
 ## Contributing
 
 Feel free to contribute to Notivio! Fork the repository and create a pull request with improvements or bug fixes.
