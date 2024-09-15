@@ -1,3 +1,7 @@
 export default (parsedPayload) => {
-	return parsedPayload.error.issues.map((issue) => issue.message);
+	const errorMessage = parsedPayload.error.issues.map((issue) => issue.message);
+	if (errorMessage[0] == 'Required') {
+		return 'Invalid payload';
+	}
+	return errorMessage;
 };
