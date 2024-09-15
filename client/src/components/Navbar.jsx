@@ -18,6 +18,7 @@ const Navbar = () => {
 					}
 				>
 					<input
+						name="search"
 						type="text"
 						placeholder="Search"
 						className="w-full md:w-auto bg-grey p-4 pl-6 pr-[12%] md:pr-6 rounded-full placeholder:text-dark-grey md:pl-12"
