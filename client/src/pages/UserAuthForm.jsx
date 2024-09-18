@@ -3,23 +3,35 @@ import AnimationWrapper from '../common/pageAnimation';
 
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-
+import { api } from '../api/api';
 import { registerSchema, loginSchema } from '../common/types/zodTypes';
 import errorMessage from '../common/types/zodMessage';
-
-import axios from 'axios';
-const api = axios.create({
-	baseURL: import.meta.env.VITE_BACKEND_URL,
-	withCredentials: true, // Ensure cookies are sent with requests
-});
+import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import userAtom from '../common/states/userAtom';
 
 function UserAuthForm({ type }) {
+	const { isAuth } = useRecoilValue(userAtom);
+	const setUserAuth = useSetRecoilState(userAtom);
+
+	const navigate = useNavigate();
+	const location = useLocation();
+	const from = location?.state?.from || '/';
+
+	useEffect(() => {
+		if (isAuth) {
+			navigate(from);
+		}
+	}, [navigate, isAuth, from]);
+
 	const userAuth = async (route, data) => {
 		try {
 			const res = await api.post(route, data);
 			return res.data;
 		} catch (error) {
 			toast.error(error?.response?.data.error || 'Something went wrong');
+			return null;
 		}
 	};
 
@@ -36,6 +48,9 @@ function UserAuthForm({ type }) {
 				toast.error(errorMessage(parsedData));
 			}
 			const res = await userAuth('/login', loginData);
+			if (res) {
+				setUserAuth({ isAuth: true, user: res.user });
+			}
 		} else {
 			const { fullname, email, password } = data;
 			const registerData = { fullname, email, password };
@@ -45,6 +60,9 @@ function UserAuthForm({ type }) {
 				return;
 			}
 			const res = await userAuth('/register', registerData);
+			if (res) {
+				setUserAuth({ isAuth: true, user: res.user });
+			}
 		}
 	};
 	return (
