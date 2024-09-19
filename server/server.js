@@ -5,6 +5,7 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import register from './controllers/register.js';
 import login from './controllers/login.js';
+import logout from './controllers/logout.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use(
 
 app.post('/register', register);
 app.post('/login', login);
+app.get('/logout', logout);
 
 // Connect to mongoDB
 connectDB();

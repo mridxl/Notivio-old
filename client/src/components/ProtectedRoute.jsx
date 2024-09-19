@@ -3,10 +3,10 @@ import { useRecoilValue } from 'recoil';
 import userAtom from '../common/states/userAtom';
 
 const ProtectedRoute = ({ children }) => {
-	const { isAuth } = useRecoilValue(userAtom);
+	const { isAuth, user } = useRecoilValue(userAtom);
 	let location = useLocation();
 
-	if (!isAuth) {
+	if (!isAuth || !user) {
 		return <Navigate to="/login" state={{ from: location }} replace />;
 	}
 	return children;

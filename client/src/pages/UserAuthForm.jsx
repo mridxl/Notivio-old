@@ -1,18 +1,17 @@
 import { Toaster, toast } from 'react-hot-toast';
 import AnimationWrapper from '../common/pageAnimation';
-
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import { api } from '../api/api';
 import { registerSchema, loginSchema } from '../common/types/zodTypes';
 import errorMessage from '../common/types/zodMessage';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import userAtom from '../common/states/userAtom';
+import api from '../api/api';
 
 function UserAuthForm({ type }) {
-	const { isAuth } = useRecoilValue(userAtom);
+	const { isAuth, user } = useRecoilValue(userAtom);
 	const setUserAuth = useSetRecoilState(userAtom);
 
 	const navigate = useNavigate();
@@ -20,7 +19,7 @@ function UserAuthForm({ type }) {
 	const from = location?.state?.from || '/';
 
 	useEffect(() => {
-		if (isAuth) {
+		if (isAuth && user) {
 			navigate(from);
 		}
 	}, [navigate, isAuth, from]);

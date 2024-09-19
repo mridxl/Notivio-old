@@ -1,9 +1,28 @@
 import { Link, Outlet } from 'react-router-dom';
 import logo from '../imgs/logo.png';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import userAtom from '../common/states/userAtom';
+import UserNavigationPanel from './UserNavigationPanel';
 
 const Navbar = () => {
 	const [searchBoxshow, setSearchBoxshow] = useState(false);
+	const [navPanel, setNavPanel] = useState(false);
+	const navRef = useRef(null);
+	const { isAuth, user } = useRecoilValue(userAtom);
+
+	useEffect(() => {
+		const handleClick = (e) => {
+			if (navRef.current && !navRef.current.contains(e.target)) {
+				setNavPanel(false);
+			}
+		};
+		// add event listener when navPanel mounts
+		document.addEventListener('click', handleClick);
+
+		// remove event listener when navPanel unmounts
+		return () => document.removeEventListener('click', handleClick);
+	}, [navPanel]);
 
 	return (
 		<>
@@ -23,25 +42,52 @@ const Navbar = () => {
 						placeholder="Search"
 						className="w-full md:w-auto bg-grey p-4 pl-6 pr-[12%] md:pr-6 rounded-full placeholder:text-dark-grey md:pl-12"
 					/>
-					<i className="fi fi-br-search absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl"></i>
+					<i className="fi fi-rr-search absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl"></i>
 				</div>
 				<div className="flex items-center gap-3 md:gap-6 ml-auto">
 					<button
 						className="md:hidden bg-grey w-12 h-12 rounded-full flex items-center justify-center"
 						onClick={() => setSearchBoxshow((s) => !s)}
 					>
-						<i className="fi fi-br-search text-xl pt-1"></i>
+						<i className="fi fi-rr-search text-xl pt-1"></i>
 					</button>
 					<Link to="/editor" className=" hidden md:flex link gap-2 mt-1">
 						<i className="fi fi-rr-edit text-2xl"></i>
 						<p className="text-2xl">Write</p>
 					</Link>
-					<Link to="/login" className="btn-dark py">
-						Login
-					</Link>
-					<Link to="/register" className=" hidden md:block btn-dark py">
-						Register
-					</Link>
+					{isAuth && user ? (
+						<>
+							<Link to="/dashboard/notification">
+								<button className="relative w-12 h-12 rounded-full bg-grey hover:bg-black/10">
+									<i className="fi fi-rr-bell text-2xl block mt-1"></i>
+								</button>
+							</Link>
+							<div
+								className="relative"
+								onClick={() => {
+									setNavPanel((s) => !s);
+								}}
+								onBlur={() => setTimeout(() => setNavPanel(false), 300)}
+							>
+								<button className="w-12 h-12 mt-1">
+									<img
+										src={user?.profile_img}
+										className="w-full h-full object-cover rounded-full"
+									/>
+								</button>
+								{navPanel && <UserNavigationPanel />}
+							</div>
+						</>
+					) : (
+						<>
+							<Link to="/login" className="btn-dark py">
+								Login
+							</Link>
+							<Link to="/register" className=" hidden md:block btn-dark py">
+								Register
+							</Link>
+						</>
+					)}
 				</div>
 			</nav>
 		</>
