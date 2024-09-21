@@ -3,9 +3,7 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import connectDB from './config/db.js';
-import register from './controllers/register.js';
-import login from './controllers/login.js';
-import logout from './controllers/logout.js';
+import authRoutes from './routes/auth.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,10 +17,7 @@ app.use(
 		credentials: true,
 	})
 );
-
-app.post('/register', register);
-app.post('/login', login);
-app.get('/logout', logout);
+app.use('/auth', authRoutes);
 
 // Connect to mongoDB
 connectDB();
