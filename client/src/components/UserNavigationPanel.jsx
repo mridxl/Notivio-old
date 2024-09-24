@@ -10,7 +10,7 @@ function UserNavigationPanel() {
 
 	const handleLogout = async () => {
 		try {
-			const res = await api.get('/logout');
+			await api.get('/auth/logout');
 			toast.success('Logged out successfully');
 		} catch (error) {
 			toast.error('Failed to logout');
@@ -44,7 +44,7 @@ function UserNavigationPanel() {
 				<Link to="/settings/edit-profile" className="link pl-8 py-4 md:hidden">
 					Settings
 				</Link>
-				<span className="absolute border-t border-grey w-[100%]"></span>
+				<span className="absolute border-t border-grey w-[100%] md:hidden"></span>
 				<button
 					className="text-left p-4 hover:bg-grey w-full pl-8"
 					onClick={handleLogout}

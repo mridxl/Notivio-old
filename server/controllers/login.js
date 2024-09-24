@@ -12,7 +12,7 @@ export default async function (req, res) {
 	}
 	try {
 		const { email, password } = parsedPayload.data;
-		const user = await User.findOne({ 'personal_info.email': email }).exec();
+		const user = await User.findOne({ 'personal_info.email': email });
 
 		if (!user) {
 			return res.status(401).json({ error: 'Invalid email or password' });
@@ -26,7 +26,7 @@ export default async function (req, res) {
 			return res.status(401).json({ error: 'Invalid email or password' });
 		}
 
-		generateAccessToken(res, user._id);
+		generateAccessToken(res, user.username);
 
 		return res.status(200).json({
 			message: 'User logged in successfully',

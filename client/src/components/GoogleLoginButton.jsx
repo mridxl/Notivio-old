@@ -3,28 +3,34 @@ import { toast } from 'react-hot-toast';
 import api from '../api/api';
 import userAtom from '../common/states/userAtom';
 import googleIcon from '../imgs/google.png';
+import { signInWithGoogle } from '../common/firebase';
 
 export default function GoogleLoginButton() {
 	const setUserAuth = useSetRecoilState(userAtom);
-	const handleLoginSuccess = async (tokenResponse) => {
-		console.log(tokenResponse);
+
+	const handleLoginSuccess = async (user) => {
+		const { accessToken } = user;
 
 		try {
 			const res = await api.post('/auth/google', {
-				code: tokenResponse,
+				accessToken,
 			});
-			if (res) {
-				setUserAuth({ isAuth: true, user: res.user });
-			}
+			const { user } = res.data;
+			setUserAuth({ isAuth: true, user });
 			toast.success('Login successful!');
 		} catch (error) {
-			console.error(error);
-			toast.error('Login failed');
+			if (error?.response?.status === 403) {
+				toast.error(error.response.data.error);
+			} else toast.error('Login failed');
+			setUserAuth({ isAuth: false, user: null });
 		}
 	};
 
-	// const handleGoogleLogin = TODO: Implement Google Login
-
+	const handleGoogleLogin = async () => {
+		let user = await signInWithGoogle();
+		if (!user) toast.error('Login failed');
+		else handleLoginSuccess(user);
+	};
 	return (
 		<button
 			className="btn-dark flex items-center justify-center gap-4 w-[70%] center"

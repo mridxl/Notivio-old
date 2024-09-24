@@ -25,7 +25,7 @@ export default async function (req, res) {
 			},
 		});
 		if (newUser) {
-			generateAccessToken(res, newUser._id);
+			generateAccessToken(res, newUser);
 			return res.status(201).json({
 				message: 'User created successfully',
 				user: formatUserResponse(newUser),

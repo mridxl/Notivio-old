@@ -45,7 +45,7 @@ importers:
         specifier: ^1.4.0
         version: 1.7.7
       firebase:
-        specifier: ^10.1.0
+        specifier: ^10.13.1
         version: 10.13.1
       framer-motion:
         specifier: ^10.13.0

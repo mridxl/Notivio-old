@@ -17,13 +17,13 @@ function UserAuthForm({ type }) {
 
 	const navigate = useNavigate();
 	const location = useLocation();
-	const from = location?.state?.from || '/';
 
 	useEffect(() => {
+		const from = location?.state?.from || '/';
 		if (isAuth && user) {
 			navigate(from);
 		}
-	}, [navigate, isAuth, from]);
+	}, [navigate, isAuth]);
 
 	const userAuth = async (type, data) => {
 		const route = `/auth${type}`;
@@ -32,6 +32,7 @@ function UserAuthForm({ type }) {
 			return res.data;
 		} catch (error) {
 			toast.error(error?.response?.data.error || 'Something went wrong');
+			setUserAuth({ isAuth: false, user: null });
 			return null;
 		}
 	};
@@ -49,9 +50,8 @@ function UserAuthForm({ type }) {
 				toast.error(errorMessage(parsedData));
 			}
 			const res = await userAuth('/login', loginData);
-			if (res) {
-				setUserAuth({ isAuth: true, user: res.user });
-			}
+			if (!res) return;
+			setUserAuth({ isAuth: true, user: res.user });
 		} else {
 			const { fullname, email, password } = data;
 			const registerData = { fullname, email, password };
@@ -61,9 +61,8 @@ function UserAuthForm({ type }) {
 				return;
 			}
 			const res = await userAuth('/register', registerData);
-			if (res) {
-				setUserAuth({ isAuth: true, user: res.user });
-			}
+			if (!res) return;
+			setUserAuth({ isAuth: true, user: res.user });
 		}
 	};
 	return (
