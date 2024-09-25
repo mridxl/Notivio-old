@@ -26,7 +26,7 @@ export default async function (req, res) {
 			return res.status(401).json({ error: 'Invalid email or password' });
 		}
 
-		generateAccessToken(res, user.username);
+		generateAccessToken(res, user);
 
 		return res.status(200).json({
 			message: 'User logged in successfully',

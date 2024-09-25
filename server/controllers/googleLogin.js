@@ -16,8 +16,7 @@ export default async function (req, res) {
 	try {
 		//verify the token and get the user info
 		const decodedUser = await getAuth().verifyIdToken(accessToken);
-		const { name, email, picture } = decodedUser;
-		const highResImage = picture.replace('s96-c', 's384-c');
+		const { fullname, email } = decodedUser;
 
 		user = await User.findOne({ 'personal_info.email': email }).select(
 			'personal_info.fullname personal_info.profile_img personal_info.username google_auth'
@@ -28,9 +27,8 @@ export default async function (req, res) {
 			const username = await generateUsername(email);
 			user = await User.create({
 				personal_info: {
-					fullname: name,
+					fullname,
 					email,
-					profile_img: highResImage,
 					username,
 				},
 				google_auth: true,
