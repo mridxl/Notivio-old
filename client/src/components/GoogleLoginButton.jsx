@@ -20,7 +20,9 @@ export default function GoogleLoginButton() {
 			toast.success('Login successful!');
 		} catch (error) {
 			if (error?.response?.status === 403) {
-				toast.error(error.response.data.error);
+				toast.error(
+					'This email is already registered with a different login method. Please login with your email and password'
+				);
 			} else toast.error('Login failed');
 			setUserAuth({ isAuth: false, user: null });
 		}

@@ -10,5 +10,5 @@ export default async function (req, res) {
 		return res.sendStatus(204); //No content
 	}
 	res.clearCookie('token');
-	return res.sendStatus(200).json({ message: 'Logged out successfully' });
+	return res.status(200).json({ message: 'Logged out successfully' });
 }
