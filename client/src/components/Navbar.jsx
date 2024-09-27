@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import logo from '../imgs/logo.png';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -40,7 +40,7 @@ const Navbar = () => {
 						name="search"
 						type="text"
 						placeholder="Search"
-						className="w-full md:w-auto bg-grey p-4 pl-6 pr-[12%] md:pr-6 rounded-full placeholder:text-dark-grey md:pl-12"
+						className="w-full md:w-auto bg-grey p-4 pl-6 pr-[12%] md:pr-6 rounded-full placeholder:text-dark-grey placeholder:text-xl md:pl-12"
 					/>
 					<i className="fi fi-rr-search absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl"></i>
 				</div>
@@ -80,10 +80,10 @@ const Navbar = () => {
 						</>
 					) : (
 						<>
-							<Link to="/login" className="btn-dark py">
+							<Link to="/login" className="btn-dark">
 								Login
 							</Link>
-							<Link to="/register" className=" hidden md:block btn-dark py">
+							<Link to="/register" className="hidden md:block btn-dark">
 								Register
 							</Link>
 						</>
