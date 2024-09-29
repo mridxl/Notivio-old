@@ -16,18 +16,20 @@ export default async function (req, res) {
 	try {
 		//verify the token and get the user info
 		const decodedUser = await getAuth().verifyIdToken(accessToken);
-		const { fullname, email } = decodedUser;
+		console.log(decodedUser);
+		const { name, email } = decodedUser;
 
 		user = await User.findOne({ 'personal_info.email': email }).select(
 			'personal_info.fullname personal_info.profile_img personal_info.username google_auth'
 		);
+		console.log(user);
 
 		// if user does not exist, its registered with google
 		if (!user) {
 			const username = await generateUsername(email);
 			user = await User.create({
 				personal_info: {
-					fullname,
+					fullname: name,
 					email,
 					username,
 				},
