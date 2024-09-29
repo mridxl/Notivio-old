@@ -27,11 +27,17 @@ function UserAuthForm({ type }) {
 
 	const userAuth = async (type, data) => {
 		const route = `/auth${type}`;
+		const toastId = toast.loading('Authenticating...');
 		try {
 			const res = await api.post(route, data);
+			toast.success(res.data.message, {
+				id: toastId,
+			});
 			return res.data;
 		} catch (error) {
-			toast.error(error?.response?.data.error || 'Something went wrong');
+			toast.error(error?.response?.data.error || 'Something went wrong', {
+				id: toastId,
+			});
 			setUserAuth({ isAuth: false, user: null });
 			return null;
 		}
@@ -46,23 +52,25 @@ function UserAuthForm({ type }) {
 			const { email, password } = data;
 			const loginData = { email, password };
 			const parsedData = loginSchema.safeParse(loginData);
+
 			if (!parsedData.success) {
-				toast.error(errorMessage(parsedData));
+				return toast.error(errorMessage(parsedData));
+			} else {
+				const res = await userAuth('/login', loginData);
+				if (!res) return;
+				setUserAuth({ isAuth: true, user: res.user });
 			}
-			const res = await userAuth('/login', loginData);
-			if (!res) return;
-			setUserAuth({ isAuth: true, user: res.user });
 		} else {
 			const { fullname, email, password } = data;
 			const registerData = { fullname, email, password };
 			const parsedData = registerSchema.safeParse(registerData);
 			if (!parsedData.success) {
-				toast.error(errorMessage(parsedData));
-				return;
+				return toast.error(errorMessage(parsedData));
+			} else {
+				const res = await userAuth('/register', registerData);
+				if (!res) return;
+				setUserAuth({ isAuth: true, user: res.user });
 			}
-			const res = await userAuth('/register', registerData);
-			if (!res) return;
-			setUserAuth({ isAuth: true, user: res.user });
 		}
 	};
 	return (
