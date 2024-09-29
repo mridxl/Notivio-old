@@ -25,25 +25,22 @@ function UserAuthForm({ type }) {
 		}
 	}, [navigate, isAuth]);
 
-	const userAuth = async (type, data) => {
+	async function userAuth(type, data) {
 		const route = `/auth${type}`;
-		const toastId = toast.loading('Authenticating...');
+		const loading = toast.loading('Authenticating...');
 		try {
 			const res = await api.post(route, data);
-			toast.success(res.data.message, {
-				id: toastId,
-			});
+			toast.dismiss(loading);
 			return res.data;
 		} catch (error) {
-			toast.error(error?.response?.data.error || 'Something went wrong', {
-				id: toastId,
-			});
+			toast.dismiss(loading);
+			toast.error(error?.response?.data.error || 'Something went wrong');
 			setUserAuth({ isAuth: false, user: null });
 			return null;
 		}
-	};
+	}
 
-	const handleSubmit = async (e) => {
+	async function handleSubmit(e) {
 		e.preventDefault();
 		const formData = new FormData(e.target);
 		const data = Object.fromEntries(formData.entries());
@@ -72,7 +69,7 @@ function UserAuthForm({ type }) {
 				setUserAuth({ isAuth: true, user: res.user });
 			}
 		}
-	};
+	}
 	return (
 		<AnimationWrapper keyvalue={type}>
 			<section className="h-cover flex items-center justify-center">

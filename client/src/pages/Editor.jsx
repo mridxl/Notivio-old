@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import BlogEditor from '../components/BlogEditor';
 import PublishForm from '../components/PublishForm';
+import { useRecoilValue } from 'recoil';
+import editorPageAtom from '../common/states/editorPageAtom';
 
 export default function Editor() {
-	const [editorState, setEditorState] = useState('editor');
+	const editorState = useRecoilValue(editorPageAtom);
 	return <>{editorState === 'editor' ? <BlogEditor /> : <PublishForm />}</>;
 }
