@@ -9,7 +9,8 @@ import userAtom from '../common/states/userAtom';
 import AnimationWrapper from '../common/pageAnimation';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import GoogleLoginButton from '../components/GoogleLoginButton';
+//disabling google login button, needs better implementation
+// import GoogleLoginButton from '../components/GoogleLoginButton';
 
 function UserAuthForm({ type }) {
 	const { isAuth, user } = useRecoilValue(userAtom);
@@ -85,12 +86,13 @@ function UserAuthForm({ type }) {
 
 					{type !== 'Login' ? <RegisterForm /> : <LoginForm />}
 
-					<div className="relative w-full flex items-center gap-2 my-10 uppercase text-black font-bold opacity-30">
+					{/* TODO: Implement google login */}
+					{/* <div className="relative w-full flex items-center gap-2 my-10 uppercase text-black font-bold opacity-30">
 						<hr className="w-1/2 border-black" />
 						<p>Or</p>
 						<hr className="w-1/2 border-black" />
 					</div>
-					<GoogleLoginButton />
+					<GoogleLoginButton /> */}
 
 					{type !== 'Login' ? (
 						<>
