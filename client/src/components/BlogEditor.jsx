@@ -1,20 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast, Toaster } from 'react-hot-toast';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import blogAtom from '../common/states/blogAtom.js';
+import editorPageAtom from '../common/states/editorPageAtom.js';
+import api from '../api/api.js';
 import uploadCloudinaryImage from '../common/config/cloudinary.jsx';
+import AnimationWrapper from '../common/pageAnimation';
 import logo from '../imgs/logo.png';
 import defaultBanner from '../imgs/blog-banner.png';
-import AnimationWrapper from '../common/pageAnimation';
 import EditorJS from '@editorjs/editorjs';
 import tools from '../common/config/tools.jsx';
-import editorPageAtom from '../common/states/editorPageAtom.js';
 
 export default function BlogEditor() {
 	const [blog, setBlog] = useRecoilState(blogAtom);
-	const [editor, setEditor] = useState(null);
+	const resetBlog = useResetRecoilState(blogAtom);
 	const setEditorState = useSetRecoilState(editorPageAtom);
+	const resetEditorState = useResetRecoilState(editorPageAtom);
+	const [editor, setEditor] = useState(null);
+	const navigate = useNavigate();
 	const editorRef = useRef(null);
 	const titleRef = useRef(null);
 
@@ -63,6 +67,48 @@ export default function BlogEditor() {
 		};
 	}, []);
 
+	async function handleSaveDraft(e) {
+		e.preventDefault();
+		if (e.target.classList.contains('disable')) return;
+
+		if (!blog.title.trim().length || blog.title.trim().length < 3) {
+			toast.error('Title is required to save draft');
+			return;
+		}
+
+		const loading = toast.loading('Saving draft...');
+
+		e.target.style.cursor = 'not-allowed';
+		e.target.classList.add('disable');
+
+		try {
+			const res = await api.post('/create-blog', {
+				title: blog.title,
+				des: blog.description,
+				content: blog.content,
+				tags: blog.tags,
+				banner: blog.banner,
+				draft: true,
+			});
+
+			resetBlog();
+			resetEditorState();
+			toast.dismiss(loading);
+			toast.success('Draft saved successfully');
+
+			setTimeout(() => {
+				navigate(`/`);
+			}, 500);
+		} catch (e) {
+			console.error(response.data.error);
+			toast.dismiss(loading);
+			toast.error(response.data.error);
+
+			e.target.classList.remove('disable');
+			e.target.style.cursor = 'pointer';
+		}
+	}
+
 	async function handleBannerUpload(e) {
 		const file = e.target.files[0];
 		if (file) {
@@ -91,8 +137,12 @@ export default function BlogEditor() {
 	}
 
 	async function handlePublish() {
-		if (!blog.title.length) {
-			return toast.error('Please provide a title');
+		if (
+			!blog.title.trim().length ||
+			blog.title.trim().length < 3 ||
+			blog.title.trim().length > 100
+		) {
+			return toast.error('Title must be between 3 and 100 characters');
 		}
 		if (!blog.banner) {
 			return toast.error('Please upload a banner image');
@@ -120,7 +170,9 @@ export default function BlogEditor() {
 					<button className="btn-dark py-2" onClick={handlePublish}>
 						Publish
 					</button>
-					<button className="btn-light py-2">Save Draft</button>
+					<button className="btn-light py-2" onClick={handleSaveDraft}>
+						Save Draft
+					</button>
 				</div>
 			</nav>
 			<AnimationWrapper>

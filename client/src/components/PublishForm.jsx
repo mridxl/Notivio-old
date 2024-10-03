@@ -1,26 +1,121 @@
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import editorPageAtom from '../common/states/editorPageAtom';
 import AnimationWrapper from '../common/pageAnimation';
 import toast, { Toaster } from 'react-hot-toast';
+import api from '../api/api';
 import blogAtom from '../common/states/blogAtom';
 import Tag from './Tag';
+import { useNavigate } from 'react-router-dom';
 
 export default function PublishForm() {
 	const characterLimit = 200;
 	const tagsLimit = 10;
 
-	const setEditorState = useSetRecoilState(editorPageAtom);
+	const navigate = useNavigate();
 	const [blog, setBlog] = useRecoilState(blogAtom);
+	const resetBlog = useResetRecoilState(blogAtom);
+	const setEditorState = useSetRecoilState(editorPageAtom);
+	const resetEditorState = useResetRecoilState(editorPageAtom);
+
+	async function handleBlogPublish(e) {
+		e.preventDefault();
+		if (e.target.classList.contains('disable')) return;
+
+		if (!blog.title.trim().length || blog.title.trim().length < 3) {
+			toast.error('Title should be at least 3 characters long');
+			return;
+		}
+		if (!blog.description.trim().length) {
+			toast.error('Write a short description to publish the blog');
+			return;
+		}
+		if (!blog.tags.length) {
+			toast.error('Add at least one tag to help readers find your blog');
+			return;
+		}
+		const loading = toast.loading('Publishing your blog...');
+
+		e.target.style.cursor = 'not-allowed';
+		e.target.classList.add('disable');
+
+		try {
+			const res = await api.post('/create-blog', {
+				title: blog.title,
+				des: blog.description,
+				content: blog.content,
+				tags: blog.tags,
+				banner: blog.banner,
+				draft: false,
+			});
+
+			resetBlog();
+			resetEditorState();
+			toast.dismiss(loading);
+			toast.success('Blog published successfully');
+
+			setTimeout(() => {
+				navigate(`/`);
+			}, 500);
+		} catch ({ response }) {
+			console.error(response.data.error);
+			toast.dismiss(loading);
+			toast.error(response.data.error);
+
+			e.target.classList.remove('disable');
+			e.target.style.cursor = 'pointer';
+		}
+	}
+
 	function handleclose() {
 		setEditorState('editor');
 	}
+
 	function handleKeyDown(e) {
-		if (e.keycode === 13 || e.key === 'Enter' || e.key === ',') {
+		const specialCharacters = [
+			'#',
+			'$',
+			'%',
+			'&',
+			'*',
+			'(',
+			')',
+			'+',
+			'=',
+			'[',
+			']',
+			'{',
+			'}',
+			'<',
+			'>',
+			'/',
+			'?',
+			'!',
+			'@',
+			'^',
+			'~',
+			'`',
+			'|',
+			'"',
+			"'",
+			':',
+			';',
+			'.',
+			'-',
+			'_',
+			'\\',
+		];
+		if (specialCharacters.includes(e.key)) {
+			e.preventDefault();
+			toast.error('Special characters are not allowed');
+		}
+
+		if (e.key === 'Enter' || e.key === ',' || e.key === ' ') {
 			e.preventDefault();
 			if (blog.tags.length < tagsLimit) {
-				const newTag = e.target.value.trim();
+				const newTag = e.target.value.toLowerCase().trim();
 
-				if (!blog.tags.includes(newTag) && newTag !== '') {
+				if (newTag === '') return;
+				else if (!blog.tags.includes(newTag)) {
 					setBlog({ ...blog, tags: [...blog.tags, newTag] });
 					e.target.value = '';
 				} else {
@@ -32,6 +127,7 @@ export default function PublishForm() {
 			e.target.value = '';
 		}
 	}
+
 	return (
 		<AnimationWrapper>
 			<section className="w-screen min-h-screen grid items-center lg:grid-cols-2 py-16 lg:gap-4">
@@ -93,7 +189,7 @@ export default function PublishForm() {
 						{characterLimit - blog.description.length} characters left
 					</p>
 
-					<p className="text-dark-grey mb-2 mt-9">
+					<p className="text-dark-grey/80 mt-9 mb-0">
 						Topics: Helps readers to find your blog
 					</p>
 					<div className="input-box pl-2 py-2 pb-4 relative">
@@ -116,7 +212,12 @@ export default function PublishForm() {
 						{tagsLimit - blog.tags.length} tags left
 					</p>
 
-					<button className="btn-dark px-8">Publish</button>
+					<button
+						className="btn-dark px-8"
+						onClick={(e) => handleBlogPublish(e)}
+					>
+						Publish
+					</button>
 				</div>
 			</section>
 		</AnimationWrapper>

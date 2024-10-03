@@ -1,7 +1,7 @@
 // importing tools
 import Embed from '@editorjs/embed';
 import List from '@editorjs/list';
-import Image from '@editorjs/image';
+import ImageTool from '@editorjs/image';
 import Header from '@editorjs/header';
 import Quote from '@editorjs/quote';
 import Marker from '@editorjs/marker';
@@ -12,13 +12,35 @@ import Delimiter from '@editorjs/delimiter';
 import uploadCloudinaryImage from './cloudinary';
 
 const uploadImageByUrl = async (e) => {
+	const fallback =
+		'https://learn.getgrav.org/user/pages/11.troubleshooting/01.page-not-found/error-404.png';
+
+	function isValidImageUrl(url) {
+		return new Promise((resolve) => {
+			const img = new Image();
+			img.onload = function () {
+				resolve(true);
+			};
+			img.onerror = function () {
+				resolve(false);
+			};
+			img.src = url;
+		});
+	}
 	const link = new Promise((resolve, reject) => {
 		try {
-			resolve(e);
+			isValidImageUrl(e).then((valid) => {
+				if (valid) {
+					resolve(e);
+				} else {
+					resolve(fallback);
+				}
+			});
 		} catch (error) {
-			reject(error);
+			resolve(fallback);
 		}
 	});
+
 	return link.then((url) => {
 		return {
 			success: true,
@@ -46,7 +68,7 @@ export default {
 		inlineToolbar: true,
 	},
 	image: {
-		class: Image,
+		class: ImageTool,
 		config: {
 			uploader: {
 				uploadByUrl: uploadImageByUrl,

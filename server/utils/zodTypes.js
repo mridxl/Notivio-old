@@ -41,13 +41,15 @@ export const draftSchema = z.object({
 	),
 	content: z.optional(
 		z.object({
-			blocks: z.array(
-				z.object({
-					type: z.string(),
-					data: z.object({
-						text: z.string(),
-					}),
-				})
+			blocks: z.optional(
+				z.array(
+					z.object({
+						type: z.string(),
+						data: z.object({
+							text: z.string(),
+						}),
+					})
+				)
 			),
 		})
 	),
