@@ -39,7 +39,7 @@ export default function PublishForm() {
 		e.target.classList.add('disable');
 
 		try {
-			const res = await api.post('/create-blog', {
+			await api.post('/create-blog', {
 				title: blog.title,
 				des: blog.description,
 				content: blog.content,
@@ -48,14 +48,14 @@ export default function PublishForm() {
 				draft: false,
 			});
 
-			resetBlog();
-			resetEditorState();
 			toast.dismiss(loading);
 			toast.success('Blog published successfully');
 
 			setTimeout(() => {
+				resetBlog();
+				resetEditorState();
 				navigate(`/`);
-			}, 500);
+			}, 700);
 		} catch ({ response }) {
 			console.error(response.data.error);
 			toast.dismiss(loading);
