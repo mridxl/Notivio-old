@@ -63,16 +63,16 @@ const Navbar = () => {
 								</button>
 							</Link>
 							<div
-								className="relative"
+								className="relative pt-[.380rem]"
 								onClick={() => {
 									setNavPanel((s) => !s);
 								}}
 								onBlur={() => setTimeout(() => setNavPanel(false), 300)}
 							>
-								<button className="w-12 h-12 mt-1">
+								<button className="w-12 h-12">
 									<img
 										src={user?.profile_img}
-										className="w-full h-full object-cover rounded-full"
+										className="w-full h-full object-cover rounded-full border border-dark-grey/20"
 									/>
 								</button>
 								{navPanel && <UserNavigationPanel />}
