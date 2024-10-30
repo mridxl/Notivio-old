@@ -3,8 +3,11 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import connectDB from './config/db.js';
-import authRoutes from './routes/auth.js';
+import latestBlogs from './controllers/latestBlogs.js';
+import trendingBlogs from './controllers/trendingBlogs.js';
 import createBlog from './controllers/createBlog.js';
+import searchBlogs from './controllers/searchBlogs.js';
+import authRoutes from './routes/auth.js';
 import authMiddleware from './middleware/authMiddleware.js';
 
 const app = express();
@@ -19,7 +22,11 @@ app.use(
 		credentials: true,
 	})
 );
+
 app.use('/auth', authRoutes);
+app.post('/latest-blogs', latestBlogs);
+app.get('/trending-blogs', trendingBlogs);
+app.post('/search-blogs', searchBlogs);
 app.post('/create-blog', authMiddleware, createBlog);
 
 // Connect to mongoDB
