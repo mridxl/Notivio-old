@@ -21,7 +21,7 @@ Notivio is currently a work in progress. Many features are in active development
 11. - [ ] **Notification Highlights**: Recent notifications are highlighted for easy distinction.
 12. - [ ] **Edit Profile**: Update your social links, bio, and username in your profile.
 13. - [ ] **Password Management**: Change your login password from the settings page.
-14. - [ ] **Mobile Responsive**: Fully optimized for mobile with a modern design and smooth page transitions.
+14. - [x] **Mobile Responsive**: Fully optimized for mobile with a modern design and smooth page transitions.
 15. - [x] **Dark Mode**: Toggle between light and dark mode for a comfortable reading experience.
 
 ## Contributing
