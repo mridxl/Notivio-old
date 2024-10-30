@@ -5,7 +5,7 @@ export default {
 		colors: {
 			white: '#FFFFFF',
 			black: '#242424',
-			grey: '#F3F3F3',
+			grey: '#dfdfdf',
 			'dark-grey': '#6B6B6B',
 			red: '#FF4E4E',
 			error: '#F87171',
