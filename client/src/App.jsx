@@ -6,17 +6,12 @@ import UserAuthForm from './pages/UserAuthForm';
 import Editor from './pages/Editor';
 import Home from './pages/Home';
 import SearchPage from './pages/Search';
+import PageNotFound from './pages/404';
 
 const App = () => {
 	return (
 		<RecoilRoot>
 			<Routes>
-				<Route path="/" element={<Layout />}>
-					<Route index element={<Home />} />
-					<Route path="login" element={<UserAuthForm type="Login" />} />
-					<Route path="register" element={<UserAuthForm type="Register" />} />
-					<Route path="search/:query" element={<SearchPage />} />
-				</Route>
 				<Route
 					path="/editor"
 					element={
@@ -25,6 +20,13 @@ const App = () => {
 						</ProtectedRoute>
 					}
 				/>
+				<Route path="/" element={<Layout />}>
+					<Route index element={<Home />} />
+					<Route path="login" element={<UserAuthForm type="Login" />} />
+					<Route path="register" element={<UserAuthForm type="Register" />} />
+					<Route path="search/:query" element={<SearchPage />} />
+					<Route path="*" element={<PageNotFound />} />
+				</Route>
 			</Routes>
 		</RecoilRoot>
 	);
