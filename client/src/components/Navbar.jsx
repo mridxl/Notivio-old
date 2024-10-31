@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../imgs/logo.png';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -8,8 +8,18 @@ import UserNavigationPanel from './UserNavigationPanel';
 const Navbar = () => {
 	const [searchBoxshow, setSearchBoxshow] = useState(false);
 	const [navPanel, setNavPanel] = useState(false);
+	const searchRef = useRef(null);
 	const navRef = useRef(null);
 	const { isAuth, user } = useRecoilValue(userAtom);
+	const navigate = useNavigate();
+
+	const handleSearch = (e) => {
+		const query = e.target.value.toLowerCase();
+		if (query.trim().length > 0 && e.key === 'Enter') {
+			navigate(`/search/${query}`);
+			setSearchBoxshow((s) => !s);
+		}
+	};
 
 	useEffect(() => {
 		const handleClick = (e) => {
@@ -39,15 +49,22 @@ const Navbar = () => {
 					<input
 						name="search"
 						type="text"
+						ref={searchRef}
 						placeholder="Search"
 						className="w-full md:w-auto bg-grey p-4 pl-6 pr-[12%] md:pr-6 rounded-full placeholder:text-dark-grey placeholder:text-xl md:pl-12"
+						onKeyDown={(e) => {
+							handleSearch(e);
+						}}
 					/>
 					<i className="fi fi-rr-search absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl"></i>
 				</div>
 				<div className="flex items-center gap-3 md:gap-6 ml-auto">
 					<button
 						className="md:hidden bg-grey w-12 h-12 rounded-full flex items-center justify-center"
-						onClick={() => setSearchBoxshow((s) => !s)}
+						onClick={() => {
+							setSearchBoxshow((s) => !s);
+							searchRef.current.focus();
+						}}
 					>
 						<i className="fi fi-rr-search text-xl pt-1"></i>
 					</button>
