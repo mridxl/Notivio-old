@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import UserAuthForm from './pages/UserAuthForm';
 import Editor from './pages/Editor';
 import Home from './pages/Home';
+import SearchPage from './pages/Search';
 
 const App = () => {
 	return (
@@ -14,6 +15,7 @@ const App = () => {
 					<Route index element={<Home />} />
 					<Route path="login" element={<UserAuthForm type="Login" />} />
 					<Route path="register" element={<UserAuthForm type="Register" />} />
+					<Route path="search/:query" element={<SearchPage />} />
 				</Route>
 				<Route
 					path="/editor"

@@ -9,6 +9,7 @@ import createBlog from './controllers/createBlog.js';
 import searchBlogs from './controllers/searchBlogs.js';
 import authRoutes from './routes/auth.js';
 import authMiddleware from './middleware/authMiddleware.js';
+import searchUsers from './controllers/searchUsers.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,6 +29,7 @@ app.post('/latest-blogs', latestBlogs);
 app.get('/trending-blogs', trendingBlogs);
 app.post('/search-blogs', searchBlogs);
 app.post('/create-blog', authMiddleware, createBlog);
+app.get('/search-users', searchUsers);
 
 // Connect to mongoDB
 connectDB();

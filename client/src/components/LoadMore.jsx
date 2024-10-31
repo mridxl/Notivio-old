@@ -4,7 +4,7 @@ export default function LoadMoreBtn({ state, fetchFunction }) {
 		<button
 			className="text-dark-grey p-2 px-3 hover:bg-grey/30 rounded-md flex items-center gap-2"
 			onClick={() => {
-				fetchFunction(state.page + 1);
+				fetchFunction({ page: state.page + 1 });
 			}}
 		>
 			Load More
