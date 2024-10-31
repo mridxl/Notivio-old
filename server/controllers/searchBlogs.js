@@ -1,8 +1,14 @@
 import Blog from '../models/Blog.js';
 
 export default async function searchBlogs(req, res) {
-	const { tag, page } = req.body;
-	const findQuery = { tags: { $in: [tag.toLowerCase()] }, draft: 'false' };
+	const { tag, query, page } = req.body;
+	let findQuery;
+
+	if (tag) {
+		findQuery = { tags: { $in: [tag.toLowerCase()] }, draft: 'false' };
+	} else {
+		findQuery = { title: new RegExp(query, 'i'), draft: 'false' };
+	}
 
 	const maxLimit = 5;
 	try {

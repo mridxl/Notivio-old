@@ -3,23 +3,21 @@ export default function formatPaginationData({
 	newData,
 	page,
 	limit,
+	createNew = false,
 }) {
-	let obj;
 	const hasMore = newData.length === limit;
 
-	if (currentState != null) {
-		obj = {
-			page: page,
-			results: [...currentState.results, ...newData],
-			hasMore: hasMore,
-		};
-	} else {
-		obj = {
-			page: page,
+	if (createNew || currentState === null) {
+		return {
+			page,
 			results: newData,
-			hasMore: hasMore,
+			hasMore,
 		};
 	}
 
-	return obj;
+	return {
+		page,
+		results: [...currentState.results, ...newData],
+		hasMore,
+	};
 }
