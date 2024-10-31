@@ -24,7 +24,7 @@ export default function Home() {
 		'Bollywood',
 	];
 
-	const fetchBlogs = async (page = 1) => {
+	const fetchBlogs = async ({ page = 1 } = {}) => {
 		if (blogs && blogs.page === page) return;
 		try {
 			const res = await unsecureApi.post('/latest-blogs', { page });
@@ -47,7 +47,7 @@ export default function Home() {
 			console.log(err);
 		}
 	};
-	const fetchBlogByCat = async (page = 1) => {
+	const fetchBlogByCat = async ({ page = 1 } = {}) => {
 		try {
 			const res = await unsecureApi.post('/search-blogs', {
 				tag: activeTab,
