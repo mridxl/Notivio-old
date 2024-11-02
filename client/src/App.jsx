@@ -7,6 +7,7 @@ import Editor from './pages/Editor';
 import Home from './pages/Home';
 import SearchPage from './pages/Search';
 import PageNotFound from './pages/404';
+import ProfilePage from './pages/Profile';
 
 const App = () => {
 	return (
@@ -25,6 +26,7 @@ const App = () => {
 					<Route path="login" element={<UserAuthForm type="Login" />} />
 					<Route path="register" element={<UserAuthForm type="Register" />} />
 					<Route path="search/:query" element={<SearchPage />} />
+					<Route path="user/:id" element={<ProfilePage />} />
 					<Route path="*" element={<PageNotFound />} />
 				</Route>
 			</Routes>
