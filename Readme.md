@@ -11,8 +11,8 @@ Notivio is currently a work in progress. Many features are in active development
 1. - [x] **Modern Blog Editor**: Write and edit blogs effortlessly using **Editor.js**, offering a rich, block-style editing experience.
 2. - [ ] **Google Authentication**: Secure and fast login via Google.
 3. - [x] **Dynamic Blog Pages**: Blogs are accessible via dynamic URLs for a seamless experience.
-4. - [ ] **Search Functionality**: Search for blogs and users with ease.
-5. - [ ] **User Profiles**: View dedicated profiles with social links and all published blogs.
+4. - [x] **Search Functionality**: Search for blogs and users with ease.
+5. - [x] **User Profiles**: View dedicated profiles with social links and all published blogs.
 6. - [ ] **Dashboard**: Manage your published and draft blogs with an intuitive dashboard.
 7. - [ ] **Blog Analytics**: Track blog performance with detailed analytics; edit or delete blogs as needed.
 8. - [ ] **Like and Comment System**: Users can like and comment on blogs.
@@ -22,7 +22,7 @@ Notivio is currently a work in progress. Many features are in active development
 12. - [ ] **Edit Profile**: Update your social links, bio, and username in your profile.
 13. - [ ] **Password Management**: Change your login password from the settings page.
 14. - [x] **Mobile Responsive**: Fully optimized for mobile with a modern design and smooth page transitions.
-15. - [x] **Dark Mode**: Toggle between light and dark mode for a comfortable reading experience.
+15. - [ ] **Dark Mode**: Toggle between light and dark mode for a comfortable reading experience.
 
 ## Contributing
 
