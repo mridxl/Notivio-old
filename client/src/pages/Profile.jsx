@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { unsecureApi } from '../api/api';
 import formatPaginationData from '../common/formatPaginationData';
@@ -33,9 +33,8 @@ export default function ProfilePage() {
 	const [profile, setProfile] = useState(profileInitialState);
 	const [loading, setLoading] = useState(true);
 	const [blogs, setBlogs] = useState(null);
-	const {
-		user: { username },
-	} = useRecoilValue(userAtom);
+	const navigate = useNavigate();
+	const { user } = useRecoilValue(userAtom);
 
 	const {
 		personal_info: { fullname, bio, username: profileUsername, profile_img },
@@ -57,6 +56,9 @@ export default function ProfilePage() {
 		} catch (error) {
 			console.error(error);
 			setLoading(false);
+			if (error.response.status === 404) {
+				navigate('/404');
+			}
 		}
 	};
 
@@ -110,7 +112,7 @@ export default function ProfilePage() {
 							{total_reads.toLocaleString()} Reads
 						</p>
 						<div className=" flex mt -2 gap-4">
-							{profileUsername === username ? (
+							{user && profileUsername === user.username ? (
 								<Link
 									to="/settings/edit-profile"
 									className="btn-light rounded-md"
