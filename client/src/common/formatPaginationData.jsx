@@ -14,6 +14,7 @@ export default function formatPaginationData({
 			hasMore,
 		};
 	}
+	if (page === currentState.page) return currentState;
 
 	return {
 		page,
