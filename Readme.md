@@ -14,9 +14,8 @@ Notivio is currently a work in progress. Many features are in active development
 4. - [x] **Search Functionality**: Search for blogs and users with ease.
 5. - [x] **User Profiles**: View dedicated profiles with social links and all published blogs.
 6. - [ ] **Dashboard**: Manage your published and draft blogs with an intuitive dashboard.
-7. - [ ] **Blog Analytics**: Track blog performance with detailed analytics; edit or delete blogs as needed.
+7. - [ ] **Blog Analytics**: Track blog performance with detailed analytics.
 8. - [ ] **Like and Comment System**: Users can like and comment on blogs.
-9. - [ ] **Nested Comment System**: Replies are supported for deep conversations.
 10. - [ ] **Notifications**: Receive real-time notifications for blog interactions and comments.
 11. - [ ] **Notification Highlights**: Recent notifications are highlighted for easy distinction.
 12. - [ ] **Edit Profile**: Update your social links, bio, and username in your profile.
