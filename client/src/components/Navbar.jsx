@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../imgs/logo.png';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -11,6 +11,7 @@ const Navbar = () => {
 	const searchRef = useRef(null);
 	const navRef = useRef(null);
 	const { isAuth, user } = useRecoilValue(userAtom);
+	const location = useLocation();
 	const navigate = useNavigate();
 
 	const handleSearch = (e) => {
@@ -97,7 +98,12 @@ const Navbar = () => {
 						</>
 					) : (
 						<>
-							<Link to="/login" className="btn-dark">
+							<Link
+								to="/login"
+								state={{ from: location }}
+								replace
+								className="btn-dark"
+							>
 								Login
 							</Link>
 							<Link to="/register" className="hidden md:block btn-dark">
