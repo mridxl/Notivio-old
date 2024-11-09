@@ -8,6 +8,7 @@ export default async function searchBlogs(req, res) {
 	if (tag) {
 		findQuery = { tags: { $in: [tag.toLowerCase()] }, draft: 'false' };
 	} else if (query) {
+		// regex helps to search for the query in a case-insensitive manner
 		findQuery = { title: new RegExp(query, 'i'), draft: 'false' };
 	} else if (author) {
 		const user = await User.findOne({

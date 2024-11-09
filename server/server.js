@@ -11,6 +11,7 @@ import authRoutes from './routes/auth.js';
 import authMiddleware from './middleware/authMiddleware.js';
 import searchUsers from './controllers/searchUsers.js';
 import getProfile from './controllers/getProfile.js';
+import getBlog from './controllers/getBlog.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +30,7 @@ app.use('/auth', authRoutes);
 app.post('/latest-blogs', latestBlogs);
 app.get('/trending-blogs', trendingBlogs);
 app.post('/search-blogs', searchBlogs);
+app.get('/get-blog', getBlog);
 app.post('/create-blog', authMiddleware, createBlog);
 app.get('/search-users', searchUsers);
 app.get('/get-profile', getProfile);
