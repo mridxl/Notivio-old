@@ -18,8 +18,6 @@
     "@editorjs/inline-code": "^1.5.1",
     "@editorjs/list": "^1.10.0",
     "@editorjs/marker": "^1.4.0",
-    "@editorjs/quote": "^2.7.2",
-    "@editorjs/table": "^2.4.1",
     "@flaticon/flaticon-uicons": "^2.2.0",
     "axios": "^1.4.0",
     "editorjs-toggle-block": "^0.3.16",
