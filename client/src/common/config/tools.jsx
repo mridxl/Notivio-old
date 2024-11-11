@@ -3,10 +3,8 @@ import Embed from '@editorjs/embed';
 import List from '@editorjs/list';
 import ImageTool from '@editorjs/image';
 import Header from '@editorjs/header';
-import Quote from '@editorjs/quote';
 import Marker from '@editorjs/marker';
 import InlineCode from '@editorjs/inline-code';
-import Table from '@editorjs/table';
 import Delimiter from '@editorjs/delimiter';
 
 import uploadCloudinaryImage from './cloudinary';
@@ -81,16 +79,11 @@ export default {
 		class: Header,
 		config: {
 			placeholder: 'Enter a header',
-			levels: [2, 3, 4],
-			defaultLevel: 3,
+			levels: [1, 2, 3],
+			defaultLevel: 2,
 		},
-	},
-	quote: {
-		class: Quote,
-		inlineToolbar: true,
 	},
 	marker: Marker,
 	inlineCode: InlineCode,
-	table: Table,
 	delimiter: Delimiter,
 };
