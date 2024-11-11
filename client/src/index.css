@@ -87,27 +87,26 @@
         @apply text-black border-r-2 border-black pl-6 bg-grey/50 -ml-6 md:rounded-tl-lg md:rounded-bl-lg max-md:border-none;
     }
 
-    #textEditor h1,
-    h1 {
+    #editor-js h1 {
         @apply font-inter text-5xl leading-snug font-bold max-md:text-4xl max-md:leading-normal !important;
     }
 
-    #textEditor h2,
+    #editor-js h2,
     h2 {
         @apply font-inter text-4xl leading-normal font-bold max-md:text-3xl max-md:leading-snug !important;
     }
 
-    #textEditor h3,
+    #editor-js h3,
     h3 {
         @apply font-inter text-3xl leading-loose max-md:text-2xl max-md:leading-normal !important;
     }
 
-    #textEditor *,
+    #editor-js *,
     .blog-page-content * {
         @apply font-gelasio text-xl leading-10 md:text-2xl;
     }
 
-    #textEditor a,
+    #editor-js a,
     .blog-page-content a {
         @apply text-purple underline hover:opacity-50;
     }
