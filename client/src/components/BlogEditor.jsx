@@ -37,16 +37,31 @@ export default function BlogEditor() {
 				onChange: async () => {
 					try {
 						let content = await instance.save();
-						// if content type is image and capton is empty, replcae it by 'Image'
-						const updatedContentBlocks = content.blocks.map((block) => {
-							let caption;
-							if (block.type === 'image' && !block.data.caption) {
-								caption = '';
-							}
-							return { ...block, data: { ...block.data, caption } };
-						});
-						const updatedContent = { ...content, blocks: updatedContentBlocks };
 
+						// Filter out empty blocks and blocks without type
+						const validBlocks = content.blocks.filter(
+							(block) =>
+								block &&
+								block.type &&
+								block.data &&
+								Object.keys(block.data).length > 0
+						);
+
+						const updatedContentBlocks = validBlocks.map((block) => {
+							if (block.type === 'image' && !block.data.caption) {
+								return {
+									...block,
+									data: { ...block.data, caption: '' },
+								};
+							}
+							return block;
+						});
+
+						// Only update if there are valid blocks or no blocks at all
+						const updatedContent = {
+							time: content.time,
+							blocks: updatedContentBlocks,
+						};
 						setBlog((prev) => ({ ...prev, content: updatedContent }));
 					} catch (error) {
 						console.error('Saving failed: ', error);
