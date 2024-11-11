@@ -87,6 +87,11 @@
         @apply text-black border-r-2 border-black pl-6 bg-grey/50 -ml-6 md:rounded-tl-lg md:rounded-bl-lg max-md:border-none;
     }
 
+    #textEditor h1,
+    h1 {
+        @apply font-inter text-5xl leading-snug font-bold max-md:text-4xl max-md:leading-normal !important;
+    }
+
     #textEditor h2,
     h2 {
         @apply font-inter text-4xl leading-normal font-bold max-md:text-3xl max-md:leading-snug !important;
