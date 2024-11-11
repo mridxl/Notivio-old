@@ -32,7 +32,7 @@ export default function BlogEditor() {
 			const instance = new EditorJS({
 				holder: 'editor-js',
 				tools: tools,
-				data: blogContent || {},
+				data: blogContent || { blocks: [] },
 				placeholder: "Let's write an awesome story!",
 				onChange: async () => {
 					try {
@@ -48,16 +48,18 @@ export default function BlogEditor() {
 						);
 
 						const updatedContentBlocks = validBlocks.map((block) => {
-							if (block.type === 'image' && !block.data.caption) {
+							if (block.type === 'image') {
 								return {
 									...block,
-									data: { ...block.data, caption: '' },
+									data: {
+										...block.data,
+										caption: block.data.caption || '',
+									},
 								};
 							}
 							return block;
 						});
 
-						// Only update if there are valid blocks or no blocks at all
 						const updatedContent = {
 							time: content.time,
 							blocks: updatedContentBlocks,
@@ -114,10 +116,10 @@ export default function BlogEditor() {
 			setTimeout(() => {
 				navigate(`/`);
 			}, 500);
-		} catch (e) {
-			console.error(response.data.error);
+		} catch (error) {
+			console.error(error);
 			toast.dismiss(loading);
-			toast.error(response.data.error);
+			toast.error(error.response?.data?.error || 'Failed to save draft');
 
 			e.target.classList.remove('disable');
 			e.target.style.cursor = 'pointer';
@@ -162,12 +164,15 @@ export default function BlogEditor() {
 		if (!blog.banner) {
 			return toast.error('Please upload a banner image');
 		}
-		if (editor) {
+		try {
 			const content = await editor.save();
-			if (content.blocks.length === 0) {
+			if (!content || !content.blocks || content.blocks.length === 0) {
 				return toast.error('Please add some content to your blog');
 			}
 			setEditorState('publish');
+		} catch (error) {
+			console.error('Error saving content:', error);
+			toast.error('Failed to save content. Please try again.');
 		}
 	}
 
