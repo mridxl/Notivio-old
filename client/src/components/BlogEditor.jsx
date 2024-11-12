@@ -168,7 +168,7 @@ export default function BlogEditor() {
 
 			const res = await api.post('/create-blog', {
 				title: blog.title,
-				des: blog.description,
+				des: blog.des,
 				content: content,
 				tags: blog.tags,
 				banner: blog.banner,

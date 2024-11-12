@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { unsecureApi } from '../api/api.js';
 import formatDate from '../common/date.jsx';
-import blogPageAtom, { blogStructure } from '../common/states/blogPageAtom.js';
+import blogPageAtom from '../common/states/blogPageAtom.js';
 import AnimationWrapper from '../common/pageAnimation.jsx';
 import Loader from '../components/Loader.jsx';
 import BlogPostCard from '../components/BlogPost.jsx';
@@ -14,6 +14,7 @@ export default function BlogPage() {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [blog, setBlog] = useRecoilState(blogPageAtom);
+	const resetBlog = useResetRecoilState(blogPageAtom);
 	const [similarBlogs, setSimilarBlogs] = useState(null);
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(true);
@@ -43,7 +44,7 @@ export default function BlogPage() {
 			}
 		};
 		const getBlog = async () => {
-			setBlog(blogStructure);
+			resetBlog();
 			setLoading(true);
 			setSimilarBlogs(null);
 			setError(false);
@@ -60,7 +61,7 @@ export default function BlogPage() {
 		};
 		getBlog();
 		return () => {
-			setBlog(blogStructure);
+			resetBlog();
 			setSimilarBlogs(null);
 			setError(false);
 		};
@@ -103,8 +104,8 @@ export default function BlogPage() {
 					</div>
 					<BlogInteraction />
 					<div className="my-2 font-gelasio blog-page-content">
-						{content[0]?.blocks &&
-							content[0].blocks.map((block, i) => (
+						{content?.blocks &&
+							content.blocks.map((block, i) => (
 								<div key={i} className="my-4 md:my-8">
 									<BlogContent key={i} content={block} />
 								</div>

@@ -25,7 +25,7 @@ export default function PublishForm() {
 			toast.error('Title should be at least 3 characters long');
 			return;
 		}
-		if (!blog.description.trim().length) {
+		if (!blog.des.trim().length) {
 			toast.error('Write a short description to publish the blog');
 			return;
 		}
@@ -41,7 +41,7 @@ export default function PublishForm() {
 		try {
 			await api.post('/create-blog', {
 				title: blog.title,
-				des: blog.description,
+				des: blog.des,
 				content: blog.content,
 				tags: blog.tags,
 				banner: blog.banner,
@@ -149,7 +149,7 @@ export default function PublishForm() {
 						{blog.title}
 					</h1>
 					<p className="text-xl font-gelasio line-clamp-2 leading-7 mt-4">
-						{blog.description}
+						{blog.des}
 					</p>
 				</div>
 
@@ -171,22 +171,20 @@ export default function PublishForm() {
 					</p>
 					<textarea
 						maxLength={characterLimit}
-						defaultValue={blog.description}
+						defaultValue={blog.des}
 						className="h-40 resize-none input-box leading-7 pl-4"
 						onChange={(e) => {
-							setBlog({ ...blog, description: e.target.value });
+							setBlog({ ...blog, des: e.target.value });
 						}}
 						onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
 					></textarea>
 					<p
 						className={
 							'text-dark-grey mt-1 text-right ' +
-							(characterLimit - blog.description.length === 0
-								? 'text-error'
-								: '')
+							(characterLimit - blog.des.length === 0 ? 'text-error' : '')
 						}
 					>
-						{characterLimit - blog.description.length} characters left
+						{characterLimit - blog.des.length} characters left
 					</p>
 
 					<p className="text-dark-grey/80 mt-9 mb-0">

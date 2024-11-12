@@ -27,9 +27,11 @@ export default function BlogContent({ content }) {
 			return (
 				<ol className="list-decimal">
 					{data.items.map((item, index) => (
-						<li key={index} className="my-4">
-							{item}
-						</li>
+						<li
+							key={index}
+							className="my-4"
+							dangerouslySetInnerHTML={{ __html: item }}
+						></li>
 					))}
 				</ol>
 			);
@@ -37,9 +39,11 @@ export default function BlogContent({ content }) {
 			return (
 				<ul className="list-disc">
 					{data.items.map((item, index) => (
-						<li key={index} className="my-4">
-							{item}
-						</li>
+						<li
+							key={index}
+							className="my-4"
+							dangerouslySetInnerHTML={{ __html: item }}
+						></li>
 					))}
 				</ul>
 			);
