@@ -122,7 +122,9 @@
     .blog-index {
         @apply text-4xl sm:text-3xl lg:text-5xl font-bold text-grey leading-none;
     }
+
 }
+
 
 .ce-block__content,
 .ce-toolbar__content {
@@ -133,4 +135,16 @@
 .cdx-settings-button[data-tune='withBackground'],
 .cdx-settings-button[data-tune='stretched'] {
     display: none;
+}
+
+.inline-code {
+    background: rgba(250, 239, 240, .78);
+    color: #b44437;
+    padding: 3px 4px;
+    border-radius: 5px;
+    margin: 0 1px;
+    font-family: inherit;
+    font-size: .86em;
+    font-weight: 500;
+    letter-spacing: .3px;
 }
