@@ -25,7 +25,7 @@ export default function BlogContent({ content }) {
 	} else if (type === 'list') {
 		if (data.style === 'ordered') {
 			return (
-				<ol className="list-decimal">
+				<ol className="list-decimal pl-6">
 					{data.items.map((item, index) => (
 						<li
 							key={index}
@@ -37,7 +37,7 @@ export default function BlogContent({ content }) {
 			);
 		} else {
 			return (
-				<ul className="list-disc">
+				<ul className="list-disc pl-6">
 					{data.items.map((item, index) => (
 						<li
 							key={index}
@@ -74,7 +74,7 @@ export default function BlogContent({ content }) {
 		return (
 			<p
 				dangerouslySetInnerHTML={{ __html: data.text }}
-				className="text-[0.86em] important"
+				className="text-[0.86em] !important"
 			></p>
 		);
 	} else if (type === 'embed') {
