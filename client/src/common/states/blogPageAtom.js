@@ -14,7 +14,7 @@ export const blogStructure = {
 	},
 	banner: '',
 	blog_id: '',
-	content: [],
+	content: {},
 	des: '',
 	publishedAt: '',
 	tags: [],

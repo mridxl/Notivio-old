@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast, Toaster } from 'react-hot-toast';
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import blogAtom from '../common/states/blogAtom.js';
@@ -19,6 +19,7 @@ export default function BlogEditor() {
 	const resetEditorState = useResetRecoilState(editorPageAtom);
 	const [editor, setEditor] = useState(null);
 	const navigate = useNavigate();
+	const { id: blog_id } = useParams();
 	const editorRef = useRef(null);
 	const titleRef = useRef(null);
 
@@ -146,6 +147,7 @@ export default function BlogEditor() {
 			}
 		};
 	}, []);
+
 	async function handleSaveDraft(e) {
 		e.preventDefault();
 		if (e.target.classList.contains('disable')) return;
@@ -168,11 +170,12 @@ export default function BlogEditor() {
 
 			const res = await api.post('/create-blog', {
 				title: blog.title,
-				des: blog.description,
+				des: blog.des,
 				content: content,
 				tags: blog.tags,
 				banner: blog.banner,
 				draft: true,
+				id: blog_id,
 			});
 
 			toast.dismiss(loadingToast);

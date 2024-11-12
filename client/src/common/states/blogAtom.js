@@ -5,7 +5,7 @@ const blogAtom = atom({
 	default: {
 		title: '',
 		banner: '',
-		description: '',
+		des: '',
 		content: {},
 		tags: [],
 		author: {

@@ -22,6 +22,14 @@ const App = () => {
 						</ProtectedRoute>
 					}
 				/>
+				<Route
+					path="/editor/:id"
+					element={
+						<ProtectedRoute>
+							<Editor />
+						</ProtectedRoute>
+					}
+				/>
 				<Route path="/" element={<Layout />}>
 					<Route index element={<Home />} />
 					<Route path="login" element={<UserAuthForm type="Login" />} />
