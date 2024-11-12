@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { unsecureApi } from '../api/api.js';
 import formatDate from '../common/date.jsx';
-import blogPageAtom from '../common/states/blogPageAtom.js';
+import blogPageAtom, { blogStructure } from '../common/states/blogPageAtom.js';
 import AnimationWrapper from '../common/pageAnimation.jsx';
 import Loader from '../components/Loader.jsx';
 import BlogPostCard from '../components/BlogPost.jsx';
@@ -43,6 +43,7 @@ export default function BlogPage() {
 			}
 		};
 		const getBlog = async () => {
+			setBlog(blogStructure);
 			setLoading(true);
 			setSimilarBlogs(null);
 			setError(false);
@@ -58,6 +59,11 @@ export default function BlogPage() {
 			}
 		};
 		getBlog();
+		return () => {
+			setBlog(blogStructure);
+			setSimilarBlogs(null);
+			setError(false);
+		};
 	}, [id]);
 
 	useEffect(() => {
@@ -90,13 +96,20 @@ export default function BlogPage() {
 									</Link>
 								</p>
 							</div>
-							<p className="text-dark-grey opacity-75 max-sm:mt-6 max-sm:ml-12 max-sm:pl-5">
+							<p className="text-dark-grey flex sm:pt-2 opacity-75 max-sm:mt-6 max-sm:ml-12 max-sm:pl-5">
 								Published on {formatDate(publishedAt)}
 							</p>
 						</div>
 					</div>
 					<BlogInteraction />
-					<BlogContent />
+					<div className="my-2 font-gelasio blog-page-content">
+						{content[0]?.blocks &&
+							content[0].blocks.map((block, i) => (
+								<div key={i} className="my-4 md:my-8">
+									<BlogContent key={i} content={block} />
+								</div>
+							))}
+					</div>
 					<BlogInteraction />
 					{similarBlogs && similarBlogs.length > 0 && (
 						<>
