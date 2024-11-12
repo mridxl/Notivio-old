@@ -8,6 +8,7 @@ export default async function searchBlogs(req, res) {
 	if (tag) {
 		findQuery = { tags: { $in: [tag.toLowerCase()] }, draft: 'false' };
 	} else if (query) {
+		// regex helps to search for the query in a case-insensitive manner
 		findQuery = { title: new RegExp(query, 'i'), draft: 'false' };
 	} else if (author) {
 		const user = await User.findOne({
@@ -24,6 +25,7 @@ export default async function searchBlogs(req, res) {
 	}
 
 	const maxLimit = 5;
+	const pageNo = page || 1;
 	try {
 		const blogs = await Blog.find(findQuery)
 			.populate(
@@ -31,7 +33,7 @@ export default async function searchBlogs(req, res) {
 				'personal_info.profile_img personal_info.fullname personal_info.username -_id'
 			)
 			.sort({ publishedAt: -1 })
-			.skip((page - 1) * maxLimit)
+			.skip((pageNo - 1) * maxLimit)
 			.limit(maxLimit)
 			.select('blog_id title des banner activity tags publishedAt -_id');
 		return res.json({ blogs });

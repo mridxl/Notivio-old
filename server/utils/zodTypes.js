@@ -16,13 +16,29 @@ export const loginSchema = z.object({
 	password: z.string(),
 });
 
+const blockDataSchema = z
+	.object({
+		text: z.string().optional().default(''), //  Now optional with a default
+	})
+	.passthrough(); // Allow additional properties
+
+const blockSchema = z
+	.object({
+		id: z.string(),
+		type: z.string(),
+		data: blockDataSchema, // Use the updated blockDataSchema
+	})
+	.passthrough();
+
+const contentSchema = z.object({
+	time: z.number(),
+	blocks: z.array(blockSchema), // Use the updated blockSchema
+});
+
 export const blogSchema = z.object({
 	title: z.string().min(3, 'Title must be at least 3 characters long'),
 	des: z.string().max(200, 'Description must be at most 200 characters long'),
-	content: z.object({
-		time: z.number(),
-		blocks: z.array(z.object({})),
-	}),
+	content: contentSchema,
 	tags: z.array(z.string()).max(10, 'Maximum 10 tags are allowed'),
 	banner: z.string(),
 	draft: z.optional(z.boolean()),
@@ -30,24 +46,12 @@ export const blogSchema = z.object({
 
 export const draftSchema = z.object({
 	title: z.string().min(3, 'Title must be at least 3 characters long'),
-	des: z.optional(
-		z.string().max(200, 'Description must be at most 200 characters long')
-	),
-	content: z.optional(
-		z.object({
-			blocks: z.optional(
-				z.array(
-					z.object({
-						type: z.string(),
-						data: z.object({
-							text: z.string(),
-						}),
-					})
-				)
-			),
-		})
-	),
-	tags: z.optional(z.array(z.string()).max(10, 'Maximum 10 tags are allowed')),
-	banner: z.optional(z.string()),
-	draft: z.optional(z.optional(z.boolean())),
+	des: z
+		.string()
+		.max(200, 'Description must be at most 200 characters long')
+		.optional(),
+	content: contentSchema.optional(),
+	tags: z.array(z.string()).max(10, 'Maximum 10 tags are allowed').optional(),
+	banner: z.string().optional(),
+	draft: z.boolean(),
 });
