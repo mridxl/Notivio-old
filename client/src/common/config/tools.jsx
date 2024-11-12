@@ -5,7 +5,6 @@ import ImageTool from '@editorjs/image';
 import Header from '@editorjs/header';
 import Marker from '@editorjs/marker';
 import InlineCode from '@editorjs/inline-code';
-import Delimiter from '@editorjs/delimiter';
 
 import uploadCloudinaryImage from './cloudinary';
 
@@ -85,5 +84,4 @@ export default {
 	},
 	marker: Marker,
 	inlineCode: InlineCode,
-	delimiter: Delimiter,
 };
