@@ -5,7 +5,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import api from '../api/api';
 import blogAtom from '../common/states/blogAtom';
 import Tag from './Tag';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function PublishForm() {
 	const characterLimit = 200;
@@ -14,6 +14,7 @@ export default function PublishForm() {
 	const navigate = useNavigate();
 	const [blog, setBlog] = useRecoilState(blogAtom);
 	const resetBlog = useResetRecoilState(blogAtom);
+	const { id } = useParams();
 	const setEditorState = useSetRecoilState(editorPageAtom);
 	const resetEditorState = useResetRecoilState(editorPageAtom);
 
@@ -46,6 +47,7 @@ export default function PublishForm() {
 				tags: blog.tags,
 				banner: blog.banner,
 				draft: false,
+				id,
 			});
 
 			toast.dismiss(loading);
