@@ -24,101 +24,167 @@ export default function BlogEditor() {
 
 	useEffect(() => {
 		const input = titleRef.current;
-		input.style.height = 'auto';
-		input.style.height = input.scrollHeight + 'px';
+		if (input) {
+			input.style.height = 'auto';
+			input.style.height = input.scrollHeight + 'px';
+		}
 
 		if (!editorRef.current) {
-			const blogContent = blog.content;
-			const instance = new EditorJS({
-				holder: 'editor-js',
-				tools: tools,
-				data: blogContent || { blocks: [] },
-				placeholder: "Let's write an awesome story!",
-				onChange: async () => {
-					try {
-						let content = await instance.save();
+			try {
+				const blogContent =
+					blog.content && typeof blog.content === 'object'
+						? blog.content
+						: { blocks: [] };
 
-						// Filter out empty blocks and blocks without type
-						const validBlocks = content.blocks.filter(
-							(block) =>
-								block &&
-								block.type &&
-								block.data &&
-								Object.keys(block.data).length > 0
-						);
+				const instance = new EditorJS({
+					holder: 'editor-js',
+					tools: tools,
+					data: blogContent,
+					placeholder: "Let's write an awesome story!",
+					onChange: async () => {
+						try {
+							const content = await instance.save();
 
-						const updatedContentBlocks = validBlocks.map((block) => {
-							if (block.type === 'image') {
-								return {
-									...block,
-									data: {
-										...block.data,
-										caption: block.data.caption || '',
-									},
-								};
+							if (!content || !content.blocks) {
+								console.warn('Editor content is empty or invalid');
+								return;
 							}
-							return block;
-						});
 
-						const updatedContent = {
-							time: content.time,
-							blocks: updatedContentBlocks,
-						};
-						setBlog((prev) => ({ ...prev, content: updatedContent }));
-					} catch (error) {
-						console.error('Saving failed: ', error);
-					}
-				},
-			});
+							const validBlocks = content.blocks.filter((block) => {
+								return (
+									block &&
+									block.type &&
+									block.data &&
+									Object.keys(block.data).length > 0
+								);
+							});
 
-			instance.isReady.then(() => {
-				editorRef.current = instance;
-				setEditor(instance);
-			});
+							// Create new block objects to avoid modifying read-only properties
+							const updatedContentBlocks = validBlocks.map((block) => {
+								const newBlock = {
+									id: block.id,
+									type: block.type,
+									data: { ...block.data },
+								};
+
+								// Handle different block types
+								switch (block.type) {
+									case 'image':
+										newBlock.data = {
+											...newBlock.data,
+											caption: newBlock.data.caption || '',
+										};
+										break;
+									case 'embed':
+										// Create a new embed data object without modifying the original
+										newBlock.data = {
+											service: block.data.service,
+											source: block.data.source,
+											embed: block.data.embed,
+											width: block.data.width,
+											height: block.data.height,
+											caption: block.data.caption || '',
+										};
+										break;
+									default:
+										// For other block types, just use the spread operator
+										newBlock.data = { ...block.data };
+								}
+
+								return newBlock;
+							});
+
+							const updatedContent = {
+								time: content.time || Date.now(),
+								blocks: updatedContentBlocks,
+								version: content.version,
+							};
+
+							setBlog((prev) => ({ ...prev, content: updatedContent }));
+						} catch (error) {
+							// Ignore specific read-only property errors during autosave
+							if (
+								error instanceof TypeError &&
+								error.message.includes('read only property')
+							) {
+								console.warn(
+									'Handled read-only property error during autosave'
+								);
+								return;
+							}
+							console.error('Editor save failed:', error);
+							toast.error('Failed to save content. Please try again.');
+						}
+					},
+				});
+
+				instance.isReady
+					.then(() => {
+						editorRef.current = instance;
+						setEditor(instance);
+					})
+					.catch((error) => {
+						console.error('Editor initialization failed:', error);
+						toast.error(
+							'Failed to initialize editor. Please refresh the page.'
+						);
+					});
+			} catch (error) {
+				console.error('Editor setup failed:', error);
+				toast.error('Failed to setup editor. Please refresh the page.');
+			}
 		}
+
 		return () => {
 			if (editorRef.current) {
-				editorRef.current.destroy();
-				editorRef.current = null;
+				try {
+					editorRef.current.destroy();
+					editorRef.current = null;
+				} catch (error) {
+					console.error('Editor cleanup failed:', error);
+				}
 			}
 		};
 	}, []);
-
 	async function handleSaveDraft(e) {
 		e.preventDefault();
 		if (e.target.classList.contains('disable')) return;
 
-		if (!blog.title.trim().length || blog.title.trim().length < 3) {
-			toast.error('Title is required to save draft');
+		if (!blog.title?.trim()?.length || blog.title.trim().length < 3) {
+			toast.error('Title is required and must be at least 3 characters long');
 			return;
 		}
 
-		const loading = toast.loading('Saving draft...');
-
-		e.target.style.cursor = 'not-allowed';
+		const loadingToast = toast.loading('Saving draft...');
 		e.target.classList.add('disable');
+		e.target.style.cursor = 'not-allowed';
 
 		try {
+			// Ensure we have valid content before saving
+			const content = editor ? await editor.save() : blog.content;
+			if (!content || !content.blocks) {
+				throw new Error('No valid content to save');
+			}
+
 			const res = await api.post('/create-blog', {
 				title: blog.title,
 				des: blog.description,
-				content: blog.content,
+				content: content,
 				tags: blog.tags,
 				banner: blog.banner,
 				draft: true,
 			});
 
-			resetBlog();
-			resetEditorState();
-			toast.dismiss(loading);
+			toast.dismiss(loadingToast);
 			toast.success('Draft saved successfully');
 
-			setTimeout(() => {
-				navigate(`/`);
-			}, 500);
+			resetBlog();
+			resetEditorState();
+
+			setTimeout(() => navigate('/'), 500);
 		} catch (error) {
-			console.error(error);
-			toast.dismiss(loading);
+			console.error('Save draft failed:', error);
+			toast.dismiss(loadingToast);
 			toast.error(error.response?.data?.error || 'Failed to save draft');
 
 			e.target.classList.remove('disable');
@@ -127,27 +193,27 @@ export default function BlogEditor() {
 	}
 
 	async function handleBannerUpload(e) {
-		const file = e.target.files[0];
-		if (file) {
-			toast.promise(
-				uploadCloudinaryImage(file).then((uploadedImageUrl) => {
-					if (!uploadedImageUrl) {
-						throw new Error('No URL returned from Cloudinary');
-					}
-					setBlog((prev) => ({ ...prev, banner: uploadedImageUrl }));
-					return uploadedImageUrl;
-				}),
-				{
-					loading: 'Uploading banner image...',
-					success: 'Banner image uploaded successfully!',
-					error: 'Failed to upload banner image',
+		const file = e.target.files?.[0];
+		if (!file) return;
+
+		toast.promise(
+			uploadCloudinaryImage(file).then((uploadedImageUrl) => {
+				if (!uploadedImageUrl) {
+					throw new Error('No URL returned from Cloudinary');
 				}
-			);
-		}
+				setBlog((prev) => ({ ...prev, banner: uploadedImageUrl }));
+				return uploadedImageUrl;
+			}),
+			{
+				loading: 'Uploading banner image...',
+				success: 'Banner image uploaded successfully!',
+				error: 'Failed to upload banner image',
+			}
+		);
 	}
 
 	function handleTitleChange(e) {
-		let input = e.target;
+		const input = e.target;
 		input.style.height = 'auto';
 		input.style.height = input.scrollHeight + 'px';
 		setBlog((prev) => ({ ...prev, title: input.value }));
@@ -155,24 +221,31 @@ export default function BlogEditor() {
 
 	async function handlePublish() {
 		if (
-			!blog.title.trim().length ||
+			!blog.title?.trim()?.length ||
 			blog.title.trim().length < 3 ||
 			blog.title.trim().length > 100
 		) {
-			return toast.error('Title must be between 3 and 100 characters');
+			toast.error('Title must be between 3 and 100 characters');
+			return;
 		}
+
 		if (!blog.banner) {
-			return toast.error('Please upload a banner image');
+			toast.error('Please upload a banner image');
+			return;
 		}
+
 		try {
-			const content = await editor.save();
+			const content = await editor?.save();
 			if (!content || !content.blocks || content.blocks.length === 0) {
-				return toast.error('Please add some content to your blog');
+				toast.error('Please add some content to your blog');
+				return;
 			}
 			setEditorState('publish');
 		} catch (error) {
-			console.error('Error saving content:', error);
-			toast.error('Failed to save content. Please try again.');
+			console.error('Publish preparation failed:', error);
+			toast.error(
+				'Failed to prepare content for publishing. Please try again.'
+			);
 		}
 	}
 
