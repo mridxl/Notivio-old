@@ -4,4 +4,4 @@ Notivio is a modern blog-sharing platform designed to make content creation and 
 
 ### ⚠️ **This Repository is Archived**
 
-This repository is now archived as development has shifted to a new repository. The new implementation uses **TypeScript** and follows improved development practices. For the latest version of Notivio, please visit the new repository [here](https://github.com/mridxl/Notivio-v2)
+This repository is now archived as development has shifted to a new repository. The new implementation uses **TypeScript** and follows improved development practices. For the latest version of Notivio, please visit the new repository [here](https://github.com/mridxl/Notivio)
